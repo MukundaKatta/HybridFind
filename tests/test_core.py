@@ -67,8 +67,14 @@ class TestBM25Searcher:
 class TestVectorSearcher:
     def test_cosine_relevance(self) -> None:
         docs = [
-            Document(doc_id="1", text="machine learning algorithms", tokens=tokenize("machine learning algorithms")),
-            Document(doc_id="2", text="cooking recipes bread", tokens=tokenize("cooking recipes bread")),
+            Document(
+                doc_id="1",
+                text="machine learning algorithms",
+                tokens=tokenize("machine learning algorithms"),
+            ),
+            Document(
+                doc_id="2", text="cooking recipes bread", tokens=tokenize("cooking recipes bread")
+            ),
         ]
         vs = VectorSearcher()
         vs.index(docs)
