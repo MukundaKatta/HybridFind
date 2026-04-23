@@ -4,6 +4,7 @@ __version__ = "0.1.0"
 
 from hybridfind.core import (
     BM25Searcher,
+    Document,
     HybridSearch,
     SearchResult,
     VectorSearcher,
@@ -15,6 +16,7 @@ __all__ = [
     "HybridSearch",
     "BM25Searcher",
     "VectorSearcher",
+    "Document",
     "SearchResult",
     "SearchConfig",
     "reciprocal_rank_fusion",

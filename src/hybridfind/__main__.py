@@ -75,14 +75,18 @@ def search(
     top_k: int = typer.Option(5, "--top-k", "-k", help="Number of results"),
     bm25_weight: float = typer.Option(0.5, "--bm25-weight", help="BM25 weight"),
     vector_weight: float = typer.Option(0.5, "--vector-weight", help="Vector weight"),
-    filter_field: Optional[str] = typer.Option(None, "--filter-field", help="Metadata field to filter"),
-    filter_value: Optional[str] = typer.Option(None, "--filter-value", help="Metadata value to match"),
+    filter_field: Optional[str] = typer.Option(
+        None, "--filter-field", help="Metadata field to filter"
+    ),
+    filter_value: Optional[str] = typer.Option(
+        None, "--filter-value", help="Metadata value to match"
+    ),
 ) -> None:
     """Search the indexed documents."""
     engine = _load_engine()
-    engine.config.bm25_weight = bm25_weight
-    engine.config.vector_weight = vector_weight
-    engine.config = engine.config  # trigger re-validation
+    engine.config = engine.config.model_copy(
+        update={"bm25_weight": bm25_weight, "vector_weight": vector_weight}
+    )
 
     meta_filter = None
     if filter_field and filter_value:
