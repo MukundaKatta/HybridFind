@@ -14,9 +14,7 @@ class SearchConfig(BaseModel):
     vector_weight: float = Field(
         default=0.5, ge=0.0, le=1.0, description="Weight for vector similarity results"
     )
-    rrf_k: int = Field(
-        default=60, gt=0, description="RRF constant k (controls rank smoothing)"
-    )
+    rrf_k: int = Field(default=60, gt=0, description="RRF constant k (controls rank smoothing)")
     bm25_k1: float = Field(
         default=1.5, gt=0.0, description="BM25 term-frequency saturation parameter"
     )

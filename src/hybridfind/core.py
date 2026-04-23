@@ -19,6 +19,7 @@ from hybridfind.utils import (
 # Data types
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class Document:
     """A document stored in the search index."""
@@ -42,6 +43,7 @@ class SearchResult:
 # ---------------------------------------------------------------------------
 # BM25 Searcher (from-scratch implementation)
 # ---------------------------------------------------------------------------
+
 
 class BM25Searcher:
     """Classic Okapi BM25 scoring implementation."""
@@ -91,7 +93,11 @@ class BM25Searcher:
             for idx in range(self.n_docs):
                 tf = self.term_freqs[idx].get(token, 0)
                 dl = self.doc_len[idx]
-                denom = tf + self.k1 * (1 - self.b + self.b * dl / self.avgdl) if self.avgdl else tf + self.k1
+                denom = (
+                    tf + self.k1 * (1 - self.b + self.b * dl / self.avgdl)
+                    if self.avgdl
+                    else tf + self.k1
+                )
                 numerator = tf * (self.k1 + 1)
                 scores[idx] += idf * (numerator / denom) if denom else 0.0
 
@@ -102,6 +108,7 @@ class BM25Searcher:
 # ---------------------------------------------------------------------------
 # Vector (TF-IDF + cosine) Searcher
 # ---------------------------------------------------------------------------
+
 
 class VectorSearcher:
     """TF-IDF based semantic search with cosine similarity."""
@@ -122,8 +129,7 @@ class VectorSearcher:
         """Return (doc_index, cosine_score) pairs sorted descending."""
         query_vec = tfidf_vector(query_tokens, self.idf)
         scored = [
-            (idx, cosine_similarity(query_vec, dvec))
-            for idx, dvec in enumerate(self.doc_vectors)
+            (idx, cosine_similarity(query_vec, dvec)) for idx, dvec in enumerate(self.doc_vectors)
         ]
         scored.sort(key=lambda x: x[1], reverse=True)
         return [(idx, sc) for idx, sc in scored[:top_k] if sc > 0]
@@ -132,6 +138,7 @@ class VectorSearcher:
 # ---------------------------------------------------------------------------
 # Reciprocal Rank Fusion
 # ---------------------------------------------------------------------------
+
 
 def reciprocal_rank_fusion(
     rankings: list[list[tuple[int, float]]],
@@ -162,6 +169,7 @@ def reciprocal_rank_fusion(
 # ---------------------------------------------------------------------------
 # Main Hybrid Search engine
 # ---------------------------------------------------------------------------
+
 
 class HybridSearch:
     """Combines BM25 keyword search with TF-IDF vector similarity via RRF."""
