@@ -187,8 +187,9 @@ class HybridSearch:
         metadatas: list[dict[str, Any]] | None = None,
     ) -> None:
         """Ingest documents into both search indices."""
+        offset = len(self.documents)
         for i, text in enumerate(texts):
-            doc_id = ids[i] if ids else str(len(self.documents) + i)
+            doc_id = ids[i] if ids else str(offset + i)
             meta = metadatas[i] if metadatas else {}
             tokens = tokenize(text)
             self.documents.append(Document(doc_id=doc_id, text=text, metadata=meta, tokens=tokens))

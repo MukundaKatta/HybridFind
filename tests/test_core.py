@@ -125,6 +125,19 @@ class TestHybridSearch:
         results = engine.search("learning", top_k=2)
         assert len(results) <= 2
 
+    def test_auto_ids_are_sequential(self) -> None:
+        hs = HybridSearch()
+        hs.add_documents(texts=["alpha doc", "beta doc"])
+        assert [d.doc_id for d in hs.documents] == ["0", "1"]
+
+    def test_auto_ids_unique_across_batches(self) -> None:
+        hs = HybridSearch()
+        hs.add_documents(texts=["alpha doc", "beta doc"])
+        hs.add_documents(texts=["gamma doc", "delta doc"])
+        ids = [d.doc_id for d in hs.documents]
+        assert ids == ["0", "1", "2", "3"]
+        assert len(ids) == len(set(ids))
+
 
 class TestUtils:
     def test_tokenize_removes_stopwords(self) -> None:
